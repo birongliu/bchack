@@ -4,6 +4,7 @@ from groq import Groq
 from dotenv import load_dotenv
 from werkzeug.datastructures import FileStorage
 from pydantic import BaseModel
+from database import AtlasClient
 
 load_dotenv()
 
@@ -30,7 +31,7 @@ class Receipt(BaseModel):
         return f"Store: {self.store_name}\nCategory: {self.category}\nDate: {self.date}\nTotal: {self.total}\nItems: {self.items}"
 default_receipt = Receipt()
 
-def infer_image(image_url: str) -> str:
+def infer_image(image_url: str, db: AtlasClient) -> str:
 # Function to encode the image
     messages=[{"role": "system", "content": f"You are an advanced Computer Vision model. Scan and analyze the provided receipt. Use the following image as a references and Extract and organize the users recipent details"}, 
             { "role": "user", "content": [{ "type": "text", "text": "please use the image as reference when scanning users receipts"}, { "type": "text", "text": f'{default_receipt.model_dump_json()}'}] },
@@ -45,7 +46,10 @@ def infer_image(image_url: str) -> str:
         response_format=Receipt,
         messages=messages,
     )
-    print(response.choices[0])
+    print(response.choices[0].message.parsed.model_dump_json())
+
+    db.database.get_collection("receipts").insert_one({**response.choices[0].message.parsed.model_dump(), "user_id": "eb1a72ae-21bd-42e8-b10d-6b113c97f462"})
+    
     return response.choices[0].message.parsed.model_dump_json()
 
 def generate_summary(receipt: Receipt) -> dict:

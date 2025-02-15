@@ -1,6 +1,6 @@
 // import Dashboard from "./components/dashboard.jsx";
 // import Summary from "./components/summary.jsx";
-// import BudgetSection from "./components/budget.jsx";
+import BudgetSection from "./components/budget.jsx";
 import CameraModule from "./components/cameraModule.jsx";
 import VoiceModule from "./components/voiceModule.jsx";
 // import Canvas from "./components/canvas.jsx";
@@ -15,7 +15,7 @@ function App() {
   // ]);
 
   return (
-    <div className="p-4">
+    <div className="">
       <div className="mx-auto space-y-6">
         {/* <BudgetSection /> */}
 
@@ -23,8 +23,9 @@ function App() {
         {/* <Dashboard expenses={expenses} />
         <Summary budget={budget} expenses={expenses} /> */}
         {/* <ChatBox /> */}
-        <VoiceModule />
         {/* <Canvas videoRef={videoRef} /> */}
+        <span>a</span>
+        <VoiceModule />
       </div>
     </div>
   );

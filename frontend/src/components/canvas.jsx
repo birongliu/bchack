@@ -32,13 +32,16 @@ const Canvas = ({ videoRef }) => {
 
   async function makeInference(image) {
     console.log(image);
-    const f = await fetch("https://146.245.225.40:5000/image-to-text", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ image: image }),
-    });
+    const f = await fetch(
+      `${import.meta.env.VITE_API_URL}/image-to-text`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ image: image }),
+      }
+    );
     const data = await f.json();
     if (data.status === 500) {
       console.log("Error in making inference");

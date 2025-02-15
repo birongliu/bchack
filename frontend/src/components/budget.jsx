@@ -1,17 +1,15 @@
 import { useState } from "react";
 
-import BudgetCard from "./budget/budget-card.jsx";
-
 // Initial sample data
 const initialBudgetData = {
-  totalBudget: 5000,
-  spent: 3750,
+  totalBudget: 100,
+  spent: 100,
   categories: [
-    { name: "Housing", budget: 2000, spent: 1800 },
-    { name: "Food", budget: 800, spent: 750 },
-    { name: "Transportation", budget: 400, spent: 350 },
-    { name: "Utilities", budget: 300, spent: 280 },
-    { name: "Entertainment", budget: 200, spent: 180 },
+    { name: "Housing", budget: 2000, spent: 100 },
+    { name: "Food", budget: 800, spent: 1 },
+    { name: "Transportation", budget: 400, spent: 1 },
+    { name: "Utilities", budget: 300, spent: 1 },
+    { name: "Entertainment", budget: 200, spent: 1 },
   ],
 };
 
@@ -40,24 +38,9 @@ export default function BudgetSection() {
     }
   };
 
-  const updateCategoryBudget = (categoryName, newBudget) => {
-    setBudgetData((prev) => ({
-      ...prev,
-      categories: prev.categories.map((cat) =>
-        cat.name === categoryName ? { ...cat, budget: newBudget } : cat
-      ),
-    }));
-  };
-
   return (
     <section className="space-y-6">
-      <div className="bg-white shadow rounded-lg p-6">
-        <div className="mb-4">
-          <h2 className="text-2xl font-bold">Monthly Budget Overview</h2>
-          <p className="text-gray-600">
-            Track your spending and stay on budget
-          </p>
-        </div>
+      <div className=" shadow rounded-lg m-10">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
             <svg
@@ -135,18 +118,6 @@ export default function BudgetSection() {
         <p className="text-sm text-gray-600 text-right">
           {percentSpent.toFixed(1)}% spent
         </p>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {budgetData.categories.map((category) => (
-          <BudgetCard
-            key={category.name}
-            category={category}
-            onUpdateBudget={(newBudget) =>
-              updateCategoryBudget(category.name, newBudget)
-            }
-          />
-        ))}
       </div>
     </section>
   );

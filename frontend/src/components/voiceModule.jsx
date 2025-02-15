@@ -35,7 +35,7 @@ export default function VoiceModule() {
           const formData = new FormData();
           formData.append("audio", audioBlob, "audio.wav");
           const response = await fetch(
-            "https://146.245.225.40:5000/speech-to-text",
+            `${import.meta.env.VITE_API_URL}/speech-to-text`,
             {
               method: "POST",
               body: formData,

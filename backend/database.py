@@ -3,7 +3,7 @@ from pymongo import MongoClient
 class AtlasClient ():
 
    def __init__ (self, altas_uri, dbname):
-       self.mongodb_client = MongoClient(altas_uri)
+       self.mongodb_client = MongoClient(altas_uri, retryWrites=True, serverSelectionTimeoutMS=5000)
        self.database = self.mongodb_client[dbname]
 
    def get_collection (self, collection_name):
