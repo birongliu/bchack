@@ -16,8 +16,6 @@ CORS(app, origins=["https://172.20.10.8:5173", "https://146.245.225.40:5173"])
 import os
 from werkzeug.utils import secure_filename
 
-
-
 @app.route('/image-to-text', methods=['POST'])
 def image_to_text():
     data = request.get_json()

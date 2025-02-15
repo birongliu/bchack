@@ -2,6 +2,7 @@ from openai import OpenAI
 import os
 from groq import Groq
 from dotenv import load_dotenv
+from typing import Literal
 from werkzeug.datastructures import FileStorage
 from pydantic import BaseModel
 from database import AtlasClient
@@ -23,7 +24,7 @@ class Item(BaseModel):
 class Receipt(BaseModel):
     store_name: str = None
     date: str = None
-    category: str = None
+    category: Literal["Food & Dining", "Transportation", "Entertainment", "Groceries", "Utilities Bills", "Others"] = None
     total: float = None
     items: list[Item] = None
 
