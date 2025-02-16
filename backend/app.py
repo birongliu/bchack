@@ -10,7 +10,7 @@ load_dotenv()
 db = AtlasClient(altas_uri=os.getenv('MOGO_URL'), dbname="bchack")
 
 app = Flask(__name__)
-CORS(app, origins=["https://172.20.10.8:5173", "https://146.245.225.40:5173"])
+CORS(app, origins=["https://172.20.10.8:5173", "https://146.245.225.40:5173", "https://192.168.1.158:5173"])
 
 
 import os
@@ -58,36 +58,93 @@ def speech_to_text():
 @app.route("/api/<user_id>/monthly-budget", methods=["GET"])
 def get_monthly_budget(user_id):
     try:
+        month = request.args.get("month")
+        if month is None:
+            return jsonify({"error": "Month not provided"}), 400
+        
         # Get monthly budget from database
-        budget = db.find("budgets", filter={"user_id": user_id})
-        if not budget:
+        budget = db.database.get_collection("monthly_budget").find_one({"user_id": user_id, "month": month})
+        if budget is None:
             return jsonify({"error": "Budget not found"}), 404
-        return jsonify({"result": budget[0]}), 200
+        budget["_id"] = str(budget["_id"])
+
+        return jsonify({"result": budget}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route("/api/<user_id>/expense-categories", methods=["GET"])
-def get_expense_categories(user_id):
+
+@app.route("/api/<user_id>/monthly-budget", methods=["POST"])
+def set_monthly_budget(user_id):
     try:
-        # Get expense categories from database
-        categories = db.find("categories", filter={"user_id": user_id})
-        if not categories:
-            return jsonify({"error": "Categories not found"}), 404
-        return jsonify({"result": categories}), 200
+        data = request.get_json()
+        data["user_id"] = user_id
+        if "month" not in data:
+            return jsonify({"error": "Month not provided"}), 400
+        # Insert monthly budget into database
+        if "budget" not in data:
+            return jsonify({"error": "Budget not provided"}), 400
+        
+        db.database.get_collection("monthly_budget").insert_one(data)
+        data["_id"] = str(data["_id"])
+        return jsonify({"result": data}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
 
+@app.route("/api/<user_id>/expense-categories", methods=["GET"])
+def get_expense_categories(user_id):
+   res = db.database.get_collection("receipts").aggregate([
+        { "$match": { "user_id": (user_id) } },
+        { "$group": { "_id": "$category", "total_spent": { "$sum": "$total" } } }
+    ])
+   categories = {
+        item["_id"]: float(item["total_spent"])
+        for item in res.to_list()
+    }
+
+   return jsonify({"result": categories}), 200
+
 @app.route("/api/<user_id>/daily-expenses", methods=["GET"])
 def get_daily_expenses(user_id):
-    try:
-        # Get daily expenses from database
-        expenses = db.find("expenses", filter={"user_id": user_id})
-        if not expenses:
-            return jsonify({"error": "Expenses not found"}), 404
-        return jsonify({"result": expenses}), 200
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    startDate = request.args.get("startDate")
+    endDate = request.args.get("endDate")
+    if startDate is None:
+        return jsonify({"error": "Date not provided"}), 400
+    
+    res = db.database.get_collection("receipts").aggregate([
+        {
+            "$match": {"user_id": user_id, "date": { "$gte": startDate, "$lte": endDate } }
+        },
+        {
+            "$group": {
+                "_id": "$date",
+                "total_spent": {"$sum": "$total"}
+            }
+        },
+        {
+            "$sort": { "_id": 1 }
+        }
+    ])
+    
+    categories = {
+        item["_id"]: float(item["total_spent"])
+        for item in res.to_list()
+    }
+
+    categories["month"] = f"{startDate[0:2]}/{startDate[6:]}"
+
+    return jsonify({"result": categories}), 200
+
+
+@app.route("/api/summary", methods=["POST"])
+def get_summary():
+    data = request.get_json()
+    if "user_id" not in data:
+        return jsonify({"error": "User ID not provided"}), 400
+    user_id = data["user_id"]
+    summary = generate_summary(user_id, db)
+    return jsonify({"result": summary}), 200
+
 
 if __name__ == '__main__':
         app.run(port=5000, host="0.0.0.0", debug=True, ssl_context=('./ssl-certficates/localhost.pem', './ssl-certficates/localhost-key.pem'))
