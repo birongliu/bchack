@@ -39,23 +39,27 @@ function CameraModule() {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
+    <div className="bg-transparent p-6 mx-10! rounded-lg shadow">
       <div className="grid gap-4">
         {isCameraActive && <Canvas videoRef={videoRef} />}
         <button
           onClick={handleCameraClick}
+          style={{
+            padding: "10px",
+            backgroundColor: "oklch(0.707 0.165 254.624)",
+            alignItems: "center",
+          }}
           className={`p-4 border ${
             isCameraActive ? "hidden" : ""
           } rounded-lg hover:bg-gray-50 transition`}
         >
           <div className="font-bold">Camera</div>
-          <div className="text-sm text-gray-600">Receipt</div>
         </button>
         <button
           onClick={handleCameraCloseClick}
-          className={`p-4 border rounded-lg ${
+          className={`p-4! border! rounded-lg! ${
             isCameraActive ? "" : "hidden"
-          } hover:bg-gray-50 transition`}
+          } hover:bg-gray-50 transition!`}
         >
           <div className="font-bold">Close Camera</div>
         </button>

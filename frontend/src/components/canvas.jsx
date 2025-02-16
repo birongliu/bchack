@@ -52,16 +52,15 @@ const Canvas = ({ videoRef }) => {
     setRecipient(recipientData(response));
   }
   return (
-    <div className="">
+    <div className="mx-10! mt-10!">
       <div className="">
         <video
           autoPlay
+          className="flex! mx-auto! justify-center! items-center! rounded-lg!"
           controls={false}
           muted
-          role="img"
           playsInline
           ref={videoRef}
-          className=""
         />
         <canvas
           hidden
@@ -79,9 +78,9 @@ const Canvas = ({ videoRef }) => {
             takePicture();
             await makeInference(convertCanvasToBase64());
           }}
-          className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 
-                     transition-colors duration-200 focus:outline-none focus:ring-2 
-                     focus:ring-blue-500 focus:ring-offset-2"
+          className="mt-5! p-2! bg-blue-600! w-full! text-white! hover:bg-blue-700! 
+                     transition-colors! duration-200! focus:outline-none! focus:ring-2! 
+                     focus:ring-blue-500! focus:ring-offset-2! "
         >
           Take Picture
         </button>
