@@ -4,6 +4,10 @@ import BudgetSection from "./components/budget.jsx";
 import CameraModule from "./components/cameraModule.jsx";
 import VoiceModule from "./components/voiceModule.jsx";
 // import Canvas from "./components/canvas.jsx";
+import BudgetOverview from "./components/BudgetOverview.jsx";
+import ExpenseCategories from "./components/ExpenseCategories.jsx";
+import DailyExpenses from "./components/DailyExpenses.jsx";
+
 function App() {
 
   // const [budget, setBudget] = useState(1000);
@@ -26,6 +30,14 @@ function App() {
         {/* <Canvas videoRef={videoRef} /> */}
         <span>a</span>
         <VoiceModule />
+
+        <BudgetOverview />
+        <br />
+        <br />
+        <ExpenseCategories />
+        <br />
+        <br />
+        <DailyExpenses />
       </div>
     </div>
   );
