@@ -40,82 +40,50 @@ def infer_image(image_url: str, db: AtlasClient) -> str:
                 {"type": "text", "text": f"Identify the from receipt."},
                 {"type": "image_url", "image_url": {"url": image_url}}
             ]}]
-    
     response = client.beta.chat.completions.parse(
         model="gpt-4o-mini",
         temperature=0,
         response_format=Receipt,
         messages=messages,
-    )
-    print(response.choices[0].message.parsed.model_dump_json())
+    )    
 
     db.database.get_collection("receipts").insert_one({**response.choices[0].message.parsed.model_dump(), "user_id": "eb1a72ae-21bd-42e8-b10d-6b113c97f462"})
     
     return response.choices[0].message.parsed.model_dump_json()
 
-def generate_summary(receipt: Receipt) -> dict:
-    """
-    Generate a summary of the receipt including total spent, item categories,
-    and spending insights.
-    
-    Args:
-        receipt (Receipt): Receipt object containing transaction details
-    
-    Returns:
-        dict: Summary of the receipt including total, categories, and insights
-    """
-    try:
-        # Calculate basic statistics
-        total_spent = receipt.total if receipt.total else sum(item.price for item in receipt.items)
-        num_items = len(receipt.items) if receipt.items else 0
-        avg_price = total_spent / num_items if num_items > 0 else 0
+def generate_summary(user_id: str, db: AtlasClient) -> str:
+    res = db.database.get_collection("receipts").aggregate([
+        { "$match": { "user_id": (user_id) } },
+        { "$group": { "_id": "$category", "total_spent": { "$sum": "$total" } } }
+    ])
+    categories = {
+        item["_id"]: float(item["total_spent"])
+        for item in res.to_list()
+    }
 
-        # Generate summary using GPT
-        prompt = f"""
-        Analyze this receipt and provide insights:
-        Store: {receipt.store_name}
-        Date: {receipt.date}
-        Total: ${total_spent:.2f}
-        Number of items: {num_items}
-        Average price per item: ${avg_price:.2f}
+    prompt = f"""
+        Analyze these expense categories and provide insights:
         
-        Items:
-        {chr(10).join([f"- {item.name}: ${item.price:.2f}" for item in receipt.items]) if receipt.items else "No items"}
+        Categories: {categories}
+        
         """
-
-        response = groq.chat.completions.create(
-            model="llama-3.1-8b-instant",
+          
+    response = groq.chat.completions.create(
+        model="llama-3.1-8b-instant",
             messages=[
-                {"role": "system", "content": "Generate a concise summary of this receipt with spending insights."},
-                {"role": "user", "content": prompt}
+                {
+                    "role": "system",
+                    "content": "Generate a concise analysis of spending patterns across categories."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
             ],
-            temperature=0,
-        )
-
-        summary = {
-            "statistics": {
-                "total_spent": total_spent,
-                "num_items": num_items,
-                "avg_price": avg_price
-            },
-            "store": receipt.store_name,
-            "date": receipt.date,
-            "category": receipt.category,
-            "insights": response.choices[0].message.content
-        }
-
-        return summary
-
-    except Exception as e:
-        print(f"Error generating summary: {e}")
-        return {
-            "error": str(e),
-            "statistics": {
-                "total_spent": 0,
-                "num_items": 0,
-                "avg_price": 0
-            }
-        }
+        temperature=0
+    )
+    return response.choices[0].message.content
+       
 
 def get_transaction(audio: FileStorage):
     try:
