@@ -23,7 +23,7 @@ Spendly is an **AI-powered smart spending tracker** that allows users to:
 - **Tech Stack:**  
   - **Frontend:** React, Typescript 
   - **Backend:** Python, Flask  
-  - **APIs:** OpenAI Vision API, Whisper API, Clerk for authentication  
+  - **APIs:** OpenAI Vision API, Whisper API. 
 
 ## Challenges we ran into  
 - **Accurate expense categorization:** Fine-tuning the LLM to correctly categorize expenses based on receipt text was complex.  
