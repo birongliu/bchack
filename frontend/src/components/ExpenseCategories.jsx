@@ -13,10 +13,16 @@ const ExpenseCategories = () => {
   const [expenseData, setExpenseData] = useState(null);
 
   useEffect(() => {
-    fetch('https://run.mocky.io/v3/fcac809d-4532-4493-90c1-b2734da4492f')
+    fetch(
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/eb1a72ae-21bd-42e8-b10d-6b113c97f462/expense-categories`
+    )
       .then((response) => response.json())
-      .then((data) => setExpenseData(data))
-      .catch((error) => console.error('Error fetching expense categories:', error));
+      .then((data) => setExpenseData(data.result))
+      .catch((error) =>
+        console.error("Error fetching expense categories:", error)
+      );
   }, []);
 
   if (!expenseData) {
@@ -29,14 +35,15 @@ const ExpenseCategories = () => {
 
   // Define expense categories with display labels and associated colors.
   const categories = [
-    { key: 'dining', label: 'Dining', color: '#f87171' },
-    { key: 'transportation', label: 'Transportation', color: '#60a5fa' },
-    { key: 'entertainment', label: 'Entertainment', color: '#facc15' },
-    { key: 'groceries', label: 'Groceries', color: '#34d399' },
-    { key: 'utilities_bills', label: 'Utilities & Bills', color: '#a78bfa' },
-    { key: 'others', label: 'Others', color: '#f472b6' },
+    { key: "Food & Dining", label: "Dining", color: "#f87171" },
+    { key: "Transportation", label: "Transportation", color: "#60a5fa" },
+    { key: "Entertainment", label: "Entertainment", color: "#facc15" },
+    { key: "Groceries", label: "Groceries", color: "#34d399" },
+    { key: "Utilities Bills", label: "Utilities & Bills", color: "#a78bfa" },
+    { key: "Others", label: "Others", color: "#f472b6" },
   ];
 
+  
   // Calculate the total expense.
   const totalExpense = Object.values(expenseData).reduce((sum, value) => sum + value, 0);
 
@@ -58,7 +65,7 @@ const ExpenseCategories = () => {
     value: expenseData[cat.key],
     percentage: totalExpense > 0 ? ((expenseData[cat.key] / totalExpense) * 100).toFixed(0) : 0,
   }));
-
+  
   return (
     <div className="p-4">
       <h2 className="text-center text-lg font-bold mb-4">Expense Categories</h2>
@@ -84,6 +91,7 @@ const ExpenseCategories = () => {
               <p className="text-xs font-semibold">{cat.label}</p>
             </div>
             <p className="text-[10px]">
+        
               {cat.percentage}% (${cat.value.toFixed(2)})
             </p>
           </div>

@@ -37,7 +37,7 @@ def infer_image(image_url: str, db: AtlasClient) -> str:
     messages=[{"role": "system", "content": f"You are an advanced Computer Vision model. Scan and analyze the provided receipt. Use the following image as a references and Extract and organize the users recipent details"}, 
             { "role": "user", "content": [{ "type": "text", "text": "please use the image as reference when scanning users receipts"}, { "type": "text", "text": f'{default_receipt.model_dump_json()}'}] },
             {"role": "user", "content": [
-                {"type": "text", "text": f"Identify the from receipt."},
+                {"type": "text", "text": f"Identify the from receipt. The date should be formatted as MM/DD/YYYY"},
                 {"type": "image_url", "image_url": {"url": image_url}}
             ]}]
     response = client.beta.chat.completions.parse(
@@ -48,7 +48,9 @@ def infer_image(image_url: str, db: AtlasClient) -> str:
     )    
 
     db.database.get_collection("receipts").insert_one({**response.choices[0].message.parsed.model_dump(), "user_id": "eb1a72ae-21bd-42e8-b10d-6b113c97f462"})
-    
+    budget = db.database.get_collection("monthly_budget").find_one({"user_id": "eb1a72ae-21bd-42e8-b10d-6b113c97f462", "month": "2025-02"})
+    # update the budget with the total spent
+    db.database.get_collection("monthly_budget").update_one({"_id": budget["_id"]}, {"$set": {"total_spent": budget["total_spent"] + response.choices[0].message.parsed.total}})
     return response.choices[0].message.parsed.model_dump_json()
 
 def generate_summary(user_id: str, db: AtlasClient) -> str:

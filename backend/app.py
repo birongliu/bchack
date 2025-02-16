@@ -111,6 +111,9 @@ def get_daily_expenses(user_id):
     if startDate is None:
         return jsonify({"error": "Date not provided"}), 400
     
+    if endDate is None:
+        return jsonify({"error": "endDate not provided"}), 400
+    
     res = db.database.get_collection("receipts").aggregate([
         {
             "$match": {"user_id": user_id, "date": { "$gte": startDate, "$lte": endDate } }
@@ -130,8 +133,6 @@ def get_daily_expenses(user_id):
         item["_id"]: float(item["total_spent"])
         for item in res.to_list()
     }
-
-    categories["month"] = f"{startDate[0:2]}/{startDate[6:]}"
 
     return jsonify({"result": categories}), 200
 

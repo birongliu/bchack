@@ -60,8 +60,11 @@ const Canvas = ({ videoRef }) => {
           muted
           role="img"
           playsInline
+          style={{
+            width:"640",
+          height:"480",
+          }}
           ref={videoRef}
-          className=""
         />
         <canvas
           hidden

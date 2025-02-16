@@ -14,13 +14,24 @@ const BudgetOverview = () => {
   const [budgetData, setBudgetData] = useState(null);
 
   useEffect(() => {
-    fetch('https://run.mocky.io/v3/08882d19-3809-4024-90df-90c1aa377405')
+    fetch(
+      `${
+        import.meta.env.VITE_API_URL
+      }/api/eb1a72ae-21bd-42e8-b10d-6b113c97f462/monthly-budget?month=2025-02`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
       .then((response) => response.json())
       .then((data) => {
-        setBudgetData(data);
+        console.log(data);
+        setBudgetData(data.result);
       })
       .catch((error) => {
-        console.error('Error fetching budget data:', error);
+        console.error("Error fetching budget data:", error);
       });
   }, []);
 
@@ -32,7 +43,7 @@ const BudgetOverview = () => {
     );
   }
 
-  const { budget, "money-used": moneyUsed } = budgetData;
+  const { budget, "money_used": moneyUsed } = budgetData;
   const remaining = budget - moneyUsed;
   // Assume a 28-day month for daily budget calculations.
   const dailyBudget = (budget / 28).toFixed(2);
