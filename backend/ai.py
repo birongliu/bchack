@@ -50,7 +50,7 @@ def infer_image(image_url: str, db: AtlasClient) -> str:
     db.database.get_collection("receipts").insert_one({**response.choices[0].message.parsed.model_dump(), "user_id": "eb1a72ae-21bd-42e8-b10d-6b113c97f462"})
     budget = db.database.get_collection("monthly_budget").find_one({"user_id": "eb1a72ae-21bd-42e8-b10d-6b113c97f462", "month": "2025-02"})
     # update the budget with the total spent
-    db.database.get_collection("monthly_budget").update_one({"_id": budget["_id"]}, {"$set": {"total_spent": budget["total_spent"] + response.choices[0].message.parsed.total}})
+    db.database.get_collection("monthly_budget").update_one({"_id": budget["_id"]}, {"$set": {"money_used": budget["money_used"] + response.choices[0].message.parsed.total}})
     return response.choices[0].message.parsed.model_dump_json()
 
 def generate_summary(user_id: str, db: AtlasClient) -> str:

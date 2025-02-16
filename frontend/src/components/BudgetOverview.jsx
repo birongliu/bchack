@@ -95,9 +95,9 @@ const BudgetOverview = () => {
             <p className="text-base font-semibold">${dailyBudget}</p>
           </div>
           <div className="flex flex-col items-center justify-center border p-2 rounded">
-            <p className="text-xs font-medium">Current Daily Expenses</p>
-            <p className="text-base font-semibold">${currentDailyExpenses.toFixed(2)}</p>
-          </div>
+            <p className="text-xs font-medium">Weekly budget</p>
+            <p className="text-base font-semibold">$250</p>
+        </div>
         </div>
       </div>
     </div>

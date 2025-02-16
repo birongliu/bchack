@@ -77,7 +77,7 @@ const DailyExpenses = () => {
   };
 
   return (
-    <div className="p-4 mt-10 max-w-screen-sm mx-auto">
+    <div  className="p-4 md:mx-10! mt-10! mx-4!">
       <h2 className="text-center text-lg font-bold mb-4">Daily Expenses</h2>
       {/* Bar Chart Sub-component */}
       <div className="mb-4">
@@ -87,15 +87,15 @@ const DailyExpenses = () => {
       </div>
       
       {/* Beautiful Table Sub-component */}
-      <div className="overflow-x-auto flex items-center justify-center mt-10">
-        <table className="min-w-full bg-amber-50 border border-gray-200 shadow-md rounded-lg">
+      <div className="overflow-x-auto px- flex items-center justify-center mt-10">
+        <table className="min-w-full mb-10! bg-amber-50 border border-gray-200 shadow-md rounded-lg">
           <thead className="bg-gray-200">
             <tr>
               <th className="px-4 py-2 text-left text-sm font-medium text-gray-700 border-b">Date</th>
               <th className="px-4 py-2 text-left text-sm font-medium text-gray-700 border-b">Expense</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody className="divide-y  divide-gray-200">
             {dates.map((date) => (
               <tr key={date} className="hover:bg-gray-50">
                 <td className="px-4 py-2 text-sm text-gray-600">{date}</td>

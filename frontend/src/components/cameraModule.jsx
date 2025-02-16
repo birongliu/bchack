@@ -39,8 +39,8 @@ function CameraModule() {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <div style={{ marginTop: "20px"}} className="grid gap-4">
+    <div className="bg-transparent p-6 mx-10! rounded-lg shadow">
+      <div className="grid gap-4">
         {isCameraActive && <Canvas videoRef={videoRef} />}
         <button
           onClick={handleCameraClick}
@@ -57,9 +57,9 @@ function CameraModule() {
         </button>
         <button
           onClick={handleCameraCloseClick}
-          className={`p-4 border rounded-lg ${
+          className={`p-4! border! rounded-lg! ${
             isCameraActive ? "" : "hidden"
-          } hover:bg-gray-50 transition`}
+          } hover:bg-gray-50 transition!`}
         >
           <div className="font-bold">Close Camera</div>
         </button>

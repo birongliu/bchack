@@ -10,7 +10,7 @@ load_dotenv()
 db = AtlasClient(altas_uri=os.getenv('MOGO_URL'), dbname="bchack")
 
 app = Flask(__name__)
-CORS(app, origins=["https://172.20.10.8:5173", "https://146.245.225.40:5173", "https://192.168.1.158:5173"])
+CORS(app, origins=["https://192.0.0.2:5173", "https://172.20.10.8:5173", "https://146.245.225.40:5173", "https://192.168.1.158:5173"])
 
 
 import os
