@@ -1,6 +1,12 @@
 ## Inspiration  
 Managing finances effectively can be a challenge, especially with unpredictable spending habits and lack of real-time insights. We wanted to create an AI-powered tool that simplifies budget tracking, provides smart recommendations, and enhances financial awareness. **Spendly** was born to help users take control of their spending in a seamless and interactive way.
 
+![Screenshots](https://github.com/user-attachments/assets/555320a4-78de-4d50-9878-b98c8b10924d)
+
+Watch the video:
+
+[![Watch the video](https://img.youtube.com/vi/AKRO-TnqqcM/hqdefault.jpg)](https://www.youtube.com/watch?v=AKRO-TnqqcM)
+
 ## What it does  
 Spendly is an **AI-powered smart spending tracker** that allows users to:  
 - **Set a Budget:** Users create an account and set their monthly budget. (e.g., $1000/month)  
@@ -24,6 +30,8 @@ Spendly is an **AI-powered smart spending tracker** that allows users to:
   - **Frontend:** React, Typescript 
   - **Backend:** Python, Flask  
   - **APIs:** OpenAI Vision API, Whisper API. 
+
+![Tech Stack](https://github.com/user-attachments/assets/e84e6f53-224e-4415-90e3-d4a7fc3aef51)
 
 ## Challenges we ran into  
 - **Accurate expense categorization:** Fine-tuning the LLM to correctly categorize expenses based on receipt text was complex.  
